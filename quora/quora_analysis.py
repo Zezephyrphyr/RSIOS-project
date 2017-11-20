@@ -10,14 +10,14 @@ data = []
 
 # used for data filter
 edits_threshold = 0
-followers_threshold = 0
+followers_threshold = -1
 questions_threshold = 0
 following_threshold = 0
 blogs_threshold = 0
 posts_threshold = 0
 topics_threshold = 0
 answers_threshold = 0
-views_threshold = 0
+views_threshold = -1
 
 
 # -------------------------------
@@ -82,7 +82,7 @@ for row in data:
     parsedData['answers'].append(int(row[9]))
 
     nViews = text_to_num(row[10])
-    if text_to_num(row[10]) > 100000:
+    if text_to_num(row[10]) > views_threshold:
         parsedData['views'].append(nViews)
 
     addr = ""
@@ -105,18 +105,17 @@ def draw_plot_hist(x, bins, xlabel, ylabel, title, i):
     plt.title(title)
 
 
-def draw_plot(x, y, xlabel, ylabel):
-    print 'test'
-
-
-
-
-
+def draw_plot_scatter(x, y, xlabel, ylabel, title):
+    plt.figure(title)
+    plt.scatter(x, y)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
 # ===============================
 # Draw all distribution maps
 # header fields: ['username', 'edits', 'followers', 'name', 'questions', 'following', 'blogs', 'posts', 'topics', 'answers', 'views', 'addr']
 #                   0           1           2          3        4           5           6         7         8       9           10      11
-hist_drawing_settings = [False, False, True, False, False, True, False, False, False, False, True, False]
+hist_drawing_settings = [False, False, False, False, False, False, False, False, False, False, False, False]
 distribution_size = 20
 
 # number of views distribution -- hist
@@ -127,16 +126,25 @@ for i in range(len(header)):
         print header[i]
         draw_plot_hist(parsedData[header[i]], distribution_size, 'Number of ' + header[i], 'Number of Users','Distribution Map of '+header[i], i)
 
-plt.show()
-
-
-
+print len(parsedData['views'])
+print len(parsedData['followers'])
 # x : views - y :followers: check whether they are positively relative
+draw_plot_scatter(parsedData['views'], parsedData['followers'], 'Number of views', 'Number of followers', 'Views & Followers Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['questions'], 'Number of views', 'Number of questions', 'Views & Questions Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['posts'], 'Number of views', 'Number of posts', 'Views & Posts Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['edits'], 'Number of views', 'Number of edits', 'Views & Edits Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['blogs'], 'Number of views', 'Number of blogs', 'Views & Blogs Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['answers'], 'Number of views', 'Number of answers', 'Views & Answers Relationship')
+draw_plot_scatter(parsedData['views'], parsedData['topics'], 'Number of views', 'Number of topics', 'Views & Topics Relationship')
+
+draw_plot_scatter(parsedData['followers'], parsedData['questions'], 'Number of followers', 'Number of questions', 'followers & Questions Relationship')
+draw_plot_scatter(parsedData['followers'], parsedData['posts'], 'Number of followers', 'Number of posts', 'followers & Posts Relationship')
+draw_plot_scatter(parsedData['followers'], parsedData['edits'], 'Number of followers', 'Number of edits', 'followers & Edits Relationship')
+draw_plot_scatter(parsedData['followers'], parsedData['blogs'], 'Number of followers', 'Number of blogs', 'followers & Blogs Relationship')
+draw_plot_scatter(parsedData['followers'], parsedData['answers'], 'Number of followers', 'Number of answers', 'followers & Answers Relationship')
+draw_plot_scatter(parsedData['followers'], parsedData['topics'], 'Number of followers', 'Number of topics', 'followers & Topics Relationship')
+
 
 # views - to other plots
 
-'''
-plt.plot([1,2,3,4])
-plt.ylabel('some numbers')
 plt.show()
-'''
